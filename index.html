@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastic Leakage Calculator - Interactive Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        neutral: '#64748B',
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .demo-step {
+            display: none;
+        }
+        .demo-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .input-highlight {
+            background-color: #FFF8E1;
+            border-color: #FFC107;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-primary mb-2">Plastic Leakage Calculator</h1>
+            <p class="text-gray-600">Interactive Demonstration with Live Calculations</p>
+        </header>
+        
+        <!-- Demo Navigation -->
+        <div class="flex flex-wrap justify-center mb-8 gap-2">
+            <button class="demo-nav-btn px-4 py-2 bg-primary text-white rounded-lg" data-step="1">1. Initial Setup</button>
+            <button class="demo-nav-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg" data-step="2">2. Data Input</button>
+            <button class="demo-nav-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg" data-step="3">3. Calculation</button>
+            <button class="demo-nav-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg" data-step="4">4. Results</button>
+        </div>
+        
+        <!-- Step 1: Initial Setup -->
+        <div class="demo-step active" id="step1">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold mb-6 text-primary">Step 1: Initial Configuration</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                        <select id="country" onchange="loadCountry()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">-- Select Country --</option>
+                                <option value="afghanistan">Afghanistan</option>
+                                <option value="albania">Albania</option>
+                                <option value="algeria">Algeria</option>
+                                <option value="angola">Angola</option>
+                                <option value="argentina">Argentina</option>
+                                <option value="australia">Australia</option>
+                                <option value="austria">Austria</option>
+                                <option value="bangladesh">Bangladesh</option>
+                                <option value="belgium">Belgium</option>
+                                <option value="brazil">Brazil</option>
+                                <option value="bulgaria">Bulgaria</option>
+                                <option value="cambodia">Cambodia</option>
+                                <option value="cameroon">Cameroon</option>
+                                <option value="canada">Canada</option>
+                                <option value="chile">Chile</option>
+                                <option value="china">China</option>
+                                <option value="colombia">Colombia</option>
+                                <option value="croatia">Croatia</option>
+                                <option value="cuba">Cuba</option>
+                                <option value="czechia">Czech Republic</option>
+                                <option value="denmark">Denmark</option>
+                                <option value="drc">DR Congo</option>
+                                <option value="ecuador">Ecuador</option>
+                                <option value="egypt">Egypt</option>
+                                <option value="ethiopia">Ethiopia</option>
+                                <option value="finland">Finland</option>
+                                <option value="france">France</option>
+                                <option value="germany">Germany</option>
+                                <option value="ghana">Ghana</option>
+                                <option value="greece">Greece</option>
+                                <option value="guatemala">Guatemala</option>
+                                <option value="hungary">Hungary</option>
+                                <option value="india">India</option>
+                                <option value="indonesia">Indonesia</option>
+                                <option value="iran">Iran</option>
+                                <option value="iraq">Iraq</option>
+                                <option value="ireland">Ireland</option>
+                                <option value="israel">Israel</option>
+                                <option value="italy">Italy</option>
+                                <option value="japan">Japan</option>
+                                <option value="jordan">Jordan</option>
+                                <option value="kazakhstan">Kazakhstan</option>
+                                <option value="kenya">Kenya</option>
+                                <option value="southkorea">Korea, South</option>
+                                <option value="malaysia">Malaysia</option>
+                                <option value="mexico">Mexico</option>
+                                <option value="morocco">Morocco</option>
+                                <option value="mozambique">Mozambique</option>
+                                <option value="myanmar">Myanmar</option>
+                                <option value="nepal">Nepal</option>
+                                <option value="netherlands">Netherlands</option>
+                                <option value="newzealand">New Zealand</option>
+                                <option value="nigeria">Nigeria</option>
+                                <option value="norway">Norway</option>
+                                <option value="pakistan">Pakistan</option>
+                                <option value="peru">Peru</option>
+                                <option value="philippines">Philippines</option>
+                                <option value="poland">Poland</option>
+                                <option value="portugal">Portugal</option>
+                                <option value="romania">Romania</option>
+                                <option value="russia">Russian Federation</option>
+                                <option value="saudiarabia">Saudi Arabia</option>
+                                <option value="senegal">Senegal</option>
+                                <option value="serbia">Serbia</option>
+                                <option value="singapore">Singapore</option>
+                                <option value="slovakia">Slovakia</option>
+                                <option value="southafrica">South Africa</option>
+                                <option value="spain">Spain</option>
+                                <option value="srilanka">Sri Lanka</option>
+                                <option value="sudan">Sudan</option>
+                                <option value="sweden">Sweden</option>
+                                <option value="switzerland">Switzerland</option>
+                                <option value="syria">Syria</option>
+                                <option value="tanzania">Tanzania</option>
+                                <option value="thailand">Thailand</option>
+                                <option value="turkey">Türkiye</option>
+                                <option value="uganda">Uganda</option>
+                                <option value="uae">UAE</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="ukraine">Ukraine</option>
+                                <option value="usa">United States</option>
+                                <option value="uzbekistan">Uzbekistan</option>
+                                <option value="venezuela">Venezuela</option>
+                                <option value="vietnam">Vietnam</option>
+                                <option value="yemen">Yemen</option>
+                                <option value="zambia">Zambia</option>
+                                <option value="zimbabwe">Zimbabwe</option>
+                        
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Population</label>
+                        <input type="number" id="pop" placeholder="Enter Country Population" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-700 flex items-start">
+                        <i class="fa fa-info-circle text-primary mt-1 mr-2"></i>
+                        <span>Basic configuration complete. The system will now guide you through data input for each sector.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 2: Data Input -->
+        <div class="demo-step" id="step2">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div class="flex overflow-x-auto pb-2 space-x-2">
+                        <button class="tab-btn px-3 py-1.5 bg-primary text-white rounded-full text-sm" data-tab="production">Production</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="direct">Direct Sources</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="diffuse">Diffuse Pollution</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="wastewater">Wastewater</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="waste">Solid Waste</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="uncollected">Uncollected</button>
+                        <button class="tab-btn px-3 py-1.5 bg-gray-200 text-gray-700 rounded-full text-sm" data-tab="recovery">Recovery</button>
+                    </div>
+                </div>
+                
+                <!-- Production Tab -->
+                <div class="tab-content active p-6" id="production-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.1 Production & Manufacturing</h3>
+                    <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=800" alt="Plastic production facility" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 1.1: Plastic production and manufacturing facility. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Leakage factor: 0.01-0.04% per stage</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Plastic Produced (kg/yr)</label>
+                            <input type="number" id="prodAmt" placeholder="e.g., 100000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Production Leakage (%)</label>
+                            <input type="number" id="prodLeak" placeholder="e.g., 0.025" step="0.001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Handling Leakage (%)</label>
+                            <input type="number" id="handleLeak" placeholder="e.g., 0.025" step="0.001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Processing Leakage (%)</label>
+                            <input type="number" id="procLeak" placeholder="e.g., 0.025" step="0.001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Direct Sources Tab -->
+                <div class="tab-content p-6" id="direct-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.2 Direct Sources</h3>
+                    
+                    <!-- Agriculture Subsections -->
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('mulch')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.1.1 Plastic Mulching</span>
+                            <i id="mulch-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="mulch-content" class="p-4 bg-white">
+                            <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800" alt="Agricultural plastic mulching" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.1.1: Agricultural plastic mulching. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Application rates: Europe 185kg/ha, Asia 63kg/ha, America 10-20kg/ha</p>
+                                <p class="text-gray-600">• Retrieval rates: Europe 90-98%, Asia 32%, America 32%</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Mulch Area (ha)</label>
+                                    <input type="number" id="mulchArea" placeholder="e.g., 50000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Application Rate (kg/ha)</label>
+                                    <input type="number" id="mulchRate" placeholder="e.g., 63" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Retrieval Rate (%)</label>
+                                    <input type="number" id="mulchRetr" placeholder="e.g., 32" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('greenhouse')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.1.2 Greenhouses and Tunnels</span>
+                            <i id="greenhouse-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="greenhouse-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800" alt="Greenhouses" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.1.2: Greenhouses used in agriculture. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Global average usage rate: 3,500 kg/ha</p>
+                                <p class="text-gray-600">• Collection rates: Europe 61%, South America 58%, North America & Oceania 40%, Africa 21%, Asia 3%</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Greenhouse Area (ha)</label>
+                                    <input type="number" id="ghArea" placeholder="e.g., 10000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Usage Rate (kg/ha)</label>
+                                    <input type="number" id="ghRate" placeholder="e.g., 3500" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Collection Rate (%)</label>
+                                    <input type="number" id="ghColl" placeholder="e.g., 40" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('irrigation')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.1.3 Irrigation</span>
+                            <i id="irrigation-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="irrigation-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=800" alt="Irrigation pipes" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.1.3: Agricultural irrigation systems. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Application rate: ~400 kg/ha for irrigation tape</p>
+                                <p class="text-gray-600">• Collection rates: France 35%, Europe 49.5%</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Irrigation Area (ha)</label>
+                                    <input type="number" id="irrArea" placeholder="e.g., 25000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Application Rate (kg/ha)</label>
+                                    <input type="number" id="irrRate" placeholder="e.g., 400" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Retrieval Rate (%)</label>
+                                    <input type="number" id="irrRetr" placeholder="e.g., 42" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('silage')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.1.4 Silage Tubes and Bale Wraps</span>
+                            <i id="silage-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="silage-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1625681673148-e48fc5d85d59?w=800" alt="Silage bales" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.1.4: Silage bales wrapped in plastic. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Application rates: Clamp silage (Europe) 4.7kg/ha, Baled silage 23.5kg/ha</p>
+                                <p class="text-gray-600">• Retrieval rates: 65-90% (Germany 68%, Ireland 88%)</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Silage Area (ha)</label>
+                                    <input type="number" id="silArea" placeholder="e.g., 15000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Application Rate (kg/ha)</label>
+                                    <input type="number" id="silRate" placeholder="e.g., 23.5" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Retrieval Rate (%)</label>
+                                    <input type="number" id="silRetr" placeholder="e.g., 78" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('coated')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.1.5 Plastic-Coated Seeds/Fertilizers</span>
+                            <i id="coated-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="coated-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800" alt="Seeds and fertilizers" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.1.5: Agricultural seeds and fertilizers. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Application rates: Fertilizers 40kg/ha</p>
+                                <p class="text-gray-600">• Plastic content: 0.6%-5%</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Area (ha)</label>
+                                    <input type="number" id="coatArea" placeholder="e.g., 100000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Seed Rate (kg/ha)</label>
+                                    <input type="number" id="seedRate" placeholder="e.g., 50" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Seed Plastic (%)</label>
+                                    <input type="number" id="seedPlast" placeholder="e.g., 2" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Fertilizer Rate (kg/ha)</label>
+                                    <input type="number" id="fertRate" placeholder="e.g., 40" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Fertilizer Plastic (%)</label>
+                                    <input type="number" id="fertPlast" placeholder="e.g., 2" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fisheries Section -->
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('fisheries')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.2 Fisheries</span>
+                            <i id="fisheries-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="fisheries-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800" alt="Fishing nets" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.2: Commercial fishing operations. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• An average of 1.82% of all fishing gear types is lost</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Annual Catch (tonnes)</label>
+                                    <input type="number" id="fishCatch" placeholder="e.g., 500000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Lost Gear (kg/tonne)</label>
+                                    <input type="number" id="gearLoss" placeholder="e.g., 0.75" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Aquaculture Section -->
+                    <div class="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                        <button onclick="toggleSubsection('aquaculture')" class="w-full bg-secondary/10 px-4 py-3 text-left font-semibold text-secondary hover:bg-secondary/20 transition-colors flex justify-between items-center">
+                            <span>A1.2.3 Aquaculture</span>
+                            <i id="aquaculture-icon" class="fa fa-chevron-down"></i>
+                        </button>
+                        <div id="aquaculture-content" class="p-4 bg-white hidden">
+                            <img src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800" alt="Aquaculture farm" class="w-full h-48 object-cover rounded-lg mb-3">
+                            <p class="text-xs text-gray-500 mb-3">Fig 2.3: Aquaculture operations. Photo by Unsplash</p>
+                            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                                <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                                <p class="text-gray-600">• Leakage Factor: 0.13 kg/tonne (FAO, 2021), 0.18 kg/tonne (EIA, 2023)</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Production (tonnes)</label>
+                                    <input type="number" id="aquaProd" placeholder="e.g., 200000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Leakage Factor (kg/tonne)</label>
+                                    <input type="number" id="aquaLeak" placeholder="e.g., 0.15" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Diffuse Pollution Tab -->
+                <div class="tab-content p-6" id="diffuse-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.3 Diffuse Pollution</h3>
+                    
+                    <h4 class="font-semibold mb-3 text-secondary">Artificial Turf</h4>
+                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800" alt="Artificial turf" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 3.1: Artificial turf sports field. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Field size: 7526 m² (FIFA standard full-size pitch)</p>
+                        <p class="text-gray-600">• Fiber density: 1.3-1.7 kg/m²</p>
+                        <p class="text-gray-600">• Leakage: 0.5-10% per year</p>
+                        <p class="text-gray-600">• Infill loss: 40.5 kg/field/year</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Area (m²)</label>
+                            <input type="number" id="turfArea" placeholder="e.g., 1000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fiber Density (kg/m²)</label>
+                            <input type="number" id="turfDens" placeholder="e.g., 1.5" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Leakage (%/yr)</label>
+                            <input type="number" id="turfLeak" placeholder="e.g., 5" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Infill Loss (kg/m²/yr)</label>
+                            <input type="number" id="infillLoss" placeholder="e.g., 0.005" step="0.001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-semibold mb-3 text-secondary">Rubber Surfaces</h4>
+                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800" alt="Rubber playground surface" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 3.2: Rubber playground surface. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Plastic density: 5.0-15.0 kg/m²</p>
+                        <p class="text-gray-600">• Leakage: 13.4 g/m²/year</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Area (m²)</label>
+                            <input type="number" id="rubArea" placeholder="e.g., 100000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Density (kg/m²)</label>
+                            <input type="number" id="rubDens" placeholder="e.g., 12" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Leakage (g/m²/yr)</label>
+                            <input type="number" id="rubLeak" placeholder="e.g., 13.4" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-semibold mb-3 text-secondary">Paint</h4>
+                    <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800" alt="Paint application" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 3.3: Paint application in various sectors. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Leakage factors: Automotive 6%, Architectural 8%, Maritime 39%, Road marking 14%, Industrial wood 9%, General industry 2%</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Supply (kg/yr)</label>
+                            <input type="number" id="paintSupp" placeholder="e.g., 10000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sector</label>
+                            <select id="paintSect" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="8">Architectural (8%)</option>
+                                <option value="6">Automotive (6%)</option>
+                                <option value="39">Maritime (39%)</option>
+                                <option value="14">Road marking (14%)</option>
+                                <option value="9">Industrial wood (9%)</option>
+                                <option value="2">General industry (2%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-semibold mb-3 text-secondary">Shoe Soles</h4>
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800" alt="Shoes" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 3.4: Shoe wear and tear. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Average: 75.3 grams microplastic per person per year</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Leakage (kg/person/yr)</label>
+                            <input type="number" id="shoeLeak" placeholder="e.g., 0.0753" step="0.0001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-semibold mb-3 text-secondary">Tyre Abrasion</h4>
+                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800" alt="Vehicle tires" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 3.5: Vehicle tire wear. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Loss rates: Motorcycle 45 mg/km, Passenger cars 102 mg/km, Buses 415 mg/km, Trucks 517-658 mg/km</p>
+                        <p class="text-gray-600">• Plastic fraction: 35-60% depending on vehicle type</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Distance (km/yr)</label>
+                            <input type="number" id="tyreDist" placeholder="e.g., 500000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Loss Rate (mg/km)</label>
+                            <input type="number" id="tyreLoss" placeholder="e.g., 150" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Plastic Fraction (%)</label>
+                            <input type="number" id="tyrePlast" placeholder="e.g., 35" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wastewater Tab -->
+                <div class="tab-content p-6" id="wastewater-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.4 Wastewater Treatment</h3>
+                    <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800" alt="Wastewater treatment facility" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 4: Wastewater treatment facility. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Influent Concentration (mg/L): 2.5-13.6</p>
+                        <p class="text-gray-600">• Removal Efficiency (%): Primary: 50-80%, Secondary: 85-95%, Advanced: 95-99.9%</p>
+                        <p class="text-gray-600">• Overflow: due to hydraulic overload, globally 10-30% of untreated flows</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Treated (m³/yr)</label>
+                            <input type="number" id="wwTreat" placeholder="e.g., 1000000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Influent Conc (mg/L)</label>
+                            <input type="number" id="wwConc" placeholder="e.g., 5" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Removal Eff (%)</label>
+                            <input type="number" id="wwRem" placeholder="e.g., 90" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Overflow (m³/yr)</label>
+                            <input type="number" id="wwOver" placeholder="e.g., 50000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solid Waste Tab -->
+                <div class="tab-content p-6" id="waste-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.5 Solid Waste Management</h3>
+                    <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800" alt="Waste management" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 5: Solid waste management operations. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• Collection loss: 6-45%</p>
+                        <p class="text-gray-600">• Transport loss: 2.5-6%</p>
+                        <p class="text-gray-600">• Disposal loss (landfill): 0-5%</p>
+                        <p class="text-gray-600">• Disposal loss (Open dump): 12-30%</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Plastic Waste (kg/yr)</label>
+                            <input type="number" id="swGen" placeholder="e.g., 50000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Collection Loss (%)</label>
+                            <input type="number" id="swColl" placeholder="e.g., 22.5" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Transport Loss (%)</label>
+                            <input type="number" id="swTrans" placeholder="e.g., 4" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Disposal Loss (%)</label>
+                            <input type="number" id="swDisp" placeholder="e.g., 15" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Uncollected Tab -->
+                <div class="tab-content p-6" id="uncollected-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.6 Uncollected Waste</h3>
+                    <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=800" alt="Littered waste" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 6: Uncollected waste in the environment. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• High Income (kg/person/yr): Litter 0.06-0.07, Burn 0.01</p>
+                        <p class="text-gray-600">• Upper-Middle Income (kg/person/yr): Litter 0.15-0.17, Burn 3.42-3.75</p>
+                        <p class="text-gray-600">• Lower-Middle Income (kg/person/yr): Litter 0.26-0.29, Burn 5.14-5.72</p>
+                        <p class="text-gray-600">• Low Income (kg/person/yr): Litter 0.51-0.56, Burn 3.42-3.75</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Littering (kg/person/yr)</label>
+                            <input type="number" id="litter" placeholder="e.g., 0.2" step="0.001" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Open Burning (kg/person/yr)</label>
+                            <input type="number" id="burn" placeholder="e.g., 3" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recovery Tab -->
+                <div class="tab-content p-6" id="recovery-tab">
+                    <h3 class="text-xl font-bold mb-4 text-primary">A1.7 Plastic Recovery</h3>
+                    <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800" alt="Recycling facility" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <p class="text-xs text-gray-500 mb-3">Fig 7: Plastic recovery and recycling operations. Photo by Unsplash</p>
+                    <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm">
+                        <p class="font-semibold text-gray-700 mb-1">Reference Values:</p>
+                        <p class="text-gray-600">• High Income Countries: informal 1.3%, formal 0%</p>
+                        <p class="text-gray-600">• Upper Middle Income: informal 3.64%, formal 2.52%</p>
+                        <p class="text-gray-600">• Lower Middle Income: informal 16.08%, formal 11.92%</p>
+                        <p class="text-gray-600">• Low Income Countries: informal 54.08%, formal 0.04%</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Collected for Recycling (kg/yr)</label>
+                            <input type="number" id="recColl" placeholder="e.g., 5000000" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mismanagement Rate</label>
+                            <select id="recMis" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="0.65">High Income (0.65%)</option>
+                                <option value="3.08">Upper Middle (3.08%)</option>
+                                <option value="14.00">Lower Middle (14.00%)</option>
+                                <option value="45.59">Low Income (45.59%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 3: Calculation Process -->
+        <div class="demo-step" id="step3">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6 text-center">
+                <h2 class="text-2xl font-bold mb-6 text-primary">Step 3: Running Calculations</h2>
+                
+                <div class="inline-block p-8 bg-yellow-50 rounded-full mb-6">
+                    <i class="fa fa-calculator text-5xl text-accent"></i>
+                </div>
+                
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Calculating plastic leakage factors...</h3>
+                
+                <div class="w-full bg-gray-200 rounded-full h-4 mb-6 max-w-2xl mx-auto">
+                    <div id="progressBar" class="bg-accent h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                
+                <div id="calcSteps" class="space-y-2 text-gray-700 max-w-2xl mx-auto text-left">
+                    <!-- Progress messages will be added here -->
+                </div>
+                
+                <div class="mt-8">
+                    <button id="calcBtn" onclick="performCalculation()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fa fa-play mr-2"></i> Start Calculation
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 4: Results -->
+        <div class="demo-step" id="step4">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-2xl font-bold mb-2 text-primary">Step 4: Plastic Leakage Results</h2>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Overall Results -->
+                    <div class="mb-8">
+                        <div class="bg-gradient-to-r from-purple-400 to-pink-500 p-6 rounded-lg text-white" id="summary" style="display:none;">
+                            <div class="flex flex-col md:flex-row items-center justify-between">
+                                <div class="text-center md:text-left mb-4 md:mb-0">
+                                    <p class="mb-1 text-white/90">Total Annual Plastic Leakage</p>
+                                    <p class="text-4xl font-bold" id="total">0</p>
+                                    <p class="text-white/90 mt-1">kg/year</p>
+                                </div>
+                                <div class="text-center md:text-right">
+                                    <p class="mb-1 text-white/90">Per Capita</p>
+                                    <p class="text-2xl font-medium" id="perCapita">0</p>
+                                    <p class="text-white/90 mt-1">kg/person/year</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart Visualization -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div id="pieDiv" style="display:none;">
+                            <h3 class="text-lg font-semibold mb-4 text-gray-800">Leakage Source Distribution</h3>
+                            <div class="h-80">
+                                <canvas id="pie"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div id="barDiv" style="display:none;">
+                            <h3 class="text-lg font-semibold mb-4 text-gray-800">Leakage by Sector</h3>
+                            <div class="h-80">
+                                <canvas id="bar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Results Table -->
+                    <div class="mb-8" id="tableDiv" style="display:none;">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-800">Detailed Sector Data</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200" id="table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sector</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leakage (kg/year)</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Per Capita</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody" class="bg-white divide-y divide-gray-200">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Export Options -->
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="recalculate()" class="px-6 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors flex items-center">
+                            <i class="fa fa-refresh mr-2"></i> Recalculate with Updated Data
+                        </button>
+                        <button class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center">
+                            <i class="fa fa-file-pdf-o mr-2"></i> Export PDF Report
+                        </button>
+                        <button class="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center">
+                            <i class="fa fa-file-excel-o mr-2"></i> Export Excel Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between">
+            <button id="prevBtn" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors flex items-center opacity-50 cursor-not-allowed" disabled>
+                <i class="fa fa-arrow-left mr-2"></i> Previous
+            </button>
+            <button id="nextBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center">
+                Next <i class="fa fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Country data
+        const countries = {
+            afghanistan: 41129000, albania: 2776000, algeria: 44903000, angola: 35589000,
+            argentina: 46235000, australia: 25979000, austria: 9043000, bangladesh: 171186000,
+            belgium: 11669000, brazil: 215313000, bulgaria: 6465000, cambodia: 16768000,
+            cameroon: 27915000, canada: 38930000, chile: 19604000, china: 1412175000,
+            colombia: 51874000, croatia: 3854000, cuba: 11212000, czechia: 10526000,
+            denmark: 5903000, drc: 99010000, ecuador: 18001000, egypt: 110990000,
+            ethiopia: 123380000, finland: 5557000, france: 67936000, germany: 84080000,
+            ghana: 33476000, greece: 10567000, guatemala: 17358000, hungary: 9684000,
+            india: 1417173000, indonesia: 275501000, iran: 88551000, iraq: 44496000,
+            ireland: 5087000, israel: 9551000, italy: 58857000, japan: 125125000,
+            jordan: 11286000, kazakhstan: 19622000, kenya: 54027000, southkorea: 51628000,
+            malaysia: 33938000, mexico: 127504000, morocco: 37458000, mozambique: 32970000,
+            myanmar: 54179000, nepal: 30548000, netherlands: 17703000, newzealand: 5124000,
+            nigeria: 218541000, norway: 5457000, pakistan: 235825000, peru: 34050000,
+            philippines: 115559000, poland: 37562000, portugal: 10379000, romania: 18957000,
+            russia: 143556000, saudiarabia: 36409000, senegal: 17316000, serbia: 6760000,
+            singapore: 5637000, slovakia: 5432000, southafrica: 59894000, spain: 47615000,
+            srilanka: 22181000, sudan: 46874000, sweden: 10487000, switzerland: 8770000,
+            syria: 22125000, tanzania: 65498000, thailand: 71697000,
+            turkey: 85341000, uganda: 47250000, uae: 9441000, uk: 66971000,
+            ukraine: 38000000, usa: 333288000, uzbekistan: 35648000, venezuela: 28302000,
+            vietnam: 98187000, yemen: 33697000, zambia: 20018000, zimbabwe: 16321000
+        };
+        
+        let currentDemoStep = 1;
+        const totalDemoSteps = 4;
+        let pieChart, barChart;
+        
+        // Load country population
+        function loadCountry() {
+            const c = document.getElementById('country').value;
+            if (c && countries[c]) {
+                document.getElementById('pop').value = countries[c];
+            }
+        }
+        
+        // Helper function to get input value
+        function v(id) {
+            return parseFloat(document.getElementById(id).value) || 0;
+        }
+        
+        // Toggle subsection visibility
+        function toggleSubsection(section) {
+            const content = document.getElementById(`${section}-content`);
+            const icon = document.getElementById(`${section}-icon`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+        
+        // Recalculate function - goes back to step 3 and runs calculation again
+        function recalculate() {
+            currentDemoStep = 3;
+            updateDemoStep();
+            
+            // Reset step 3 UI
+            const progressBar = document.getElementById('progressBar');
+            const calcSteps = document.getElementById('calcSteps');
+            const calcBtn = document.getElementById('calcBtn');
+            
+            progressBar.style.width = '0%';
+            calcSteps.innerHTML = '';
+            calcBtn.disabled = false;
+            calcBtn.innerHTML = '<i class="fa fa-play mr-2"></i> Start Calculation';
+            calcBtn.classList.remove('bg-green-700');
+            calcBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+        }
+        
+        // Perform the calculation
+        function performCalculation() {
+            const calcBtn = document.getElementById('calcBtn');
+            const progressBar = document.getElementById('progressBar');
+            const calcSteps = document.getElementById('calcSteps');
+            
+            calcBtn.disabled = true;
+            calcBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Calculating...';
+            
+            const steps = [
+                'Production and Manufacturing sector',
+                'Direct Sources sector',
+                'Diffuse pollution sector',
+                'Wastewater treatment sector',
+                'Solid waste management sector',
+                'Uncollected waste sector',
+                'Waste Recovery sector',
+                'Results aggregation and visualization'
+            ];
+            
+            calcSteps.innerHTML = '';
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                if (progress < steps.length) {
+                    const step = document.createElement('p');
+                    step.innerHTML = `<i class="fa fa-check-circle text-green-500 mr-2"></i> ${steps[progress]} calculations complete`;
+                    calcSteps.appendChild(step);
+                    progress++;
+                    progressBar.style.width = (progress / steps.length * 100) + '%';
+                } else {
+                    clearInterval(interval);
+                    calcBtn.innerHTML = '<i class="fa fa-check mr-2"></i> Calculations Completed';
+                    calcBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    calcBtn.classList.add('bg-green-700');
+                    
+                    // Perform actual calculation
+                    calc();
+                    
+                    // Enable next button after short delay
+                    setTimeout(() => {
+                        currentDemoStep = 4;
+                        updateDemoStep();
+                    }, 1000);
+                }
+            }, 300);
+        }
+        
+        // Main calculation function
+        function calc() {
+            const pop = v('pop');
+            
+            // A1.1 Production
+            const prod = v('prodAmt') * (v('prodLeak') + v('handleLeak') + v('procLeak')) / 100;
+            
+            // A1.2 Direct Sources - Agriculture
+            const mulch = v('mulchArea') * v('mulchRate') * (100 - v('mulchRetr')) / 100;
+            const gh = v('ghArea') * v('ghRate') * (100 - v('ghColl')) / 100;
+            const irr = v('irrArea') * v('irrRate') * (100 - v('irrRetr')) / 100;
+            const sil = v('silArea') * v('silRate') * (100 - v('silRetr')) / 100;
+            const seed = v('coatArea') * v('seedRate') * v('seedPlast') / 100;
+            const fert = v('coatArea') * v('fertRate') * v('fertPlast') / 100;
+            const agri = mulch + gh + irr + sil + seed + fert;
+            
+            // A1.2 Direct Sources - Fisheries
+            const fish = v('fishCatch') * v('gearLoss');
+            
+            // A1.2 Direct Sources - Aquaculture
+            const aqua = v('aquaProd') * v('aquaLeak');
+            
+            const direct = agri + fish + aqua;
+            
+            // A1.3 Diffuse
+            const turf = (v('turfArea') * v('turfDens') * v('turfLeak') / 100) + (v('turfArea') * v('infillLoss'));
+            const rub = v('rubArea') * v('rubDens') * v('rubLeak') / 1000;
+            const paint = v('paintSupp') * v('paintSect') / 100;
+            const shoe = pop * v('shoeLeak');
+            const tyre = v('tyreDist') * v('tyreLoss') / 1000000 * v('tyrePlast') / 100;
+            const diffuse = turf + rub + paint + shoe + tyre;
+            
+            // A1.4 Wastewater
+            const wwTreat = v('wwTreat') * v('wwConc') / 1000 * (100 - v('wwRem')) / 100;
+            const wwOver = v('wwOver') * v('wwConc') / 1000;
+            const ww = wwTreat + wwOver;
+            
+            // A1.5 Solid Waste
+            const swC = v('swGen') * v('swColl') / 100;
+            const swT = (v('swGen') - swC) * v('swTrans') / 100;
+            const swD = (v('swGen') - swC - swT) * v('swDisp') / 100;
+            const solid = swC + swT + swD;
+            
+            // A1.6 Uncollected
+            const lit = pop * v('litter');
+            const brn = pop * v('burn');
+            const uncoll = lit + brn;
+            
+            // A1.7 Recovery
+            const rec = v('recColl') * v('recMis') / 100;
+            
+            const total = prod + direct + diffuse + ww + solid + uncoll + rec;
+            
+            document.getElementById('total').textContent = total.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('perCapita').textContent = pop > 0 ? (total / pop).toFixed(4) : 'N/A';
+            document.getElementById('summary').style.display = 'block';
+            
+            const data = [
+                {name: 'A1.1 Production', val: prod, children: []},
+                {name: 'A1.2 Direct Sources', val: direct, children: [
+                    {name: 'Agriculture', val: agri, children: [
+                        {name: 'Mulching', val: mulch},
+                        {name: 'Greenhouses', val: gh},
+                        {name: 'Irrigation', val: irr},
+                        {name: 'Silage', val: sil},
+                        {name: 'Coated Materials', val: seed + fert}
+                    ]},
+                    {name: 'Fisheries', val: fish, children: []},
+                    {name: 'Aquaculture', val: aqua, children: []}
+                ]},
+                {name: 'A1.3 Diffuse Sources', val: diffuse, children: [
+                    {name: 'Artificial Turf', val: turf},
+                    {name: 'Rubber Surfaces', val: rub},
+                    {name: 'Paint', val: paint},
+                    {name: 'Shoe Soles', val: shoe},
+                    {name: 'Tyre Abrasion', val: tyre}
+                ]},
+                {name: 'A1.4 Wastewater', val: ww, children: []},
+                {name: 'A1.5 Solid Waste Mgmt', val: solid, children: [
+                    {name: 'Collection', val: swC},
+                    {name: 'Transport', val: swT},
+                    {name: 'Disposal', val: swD}
+                ]},
+                {name: 'A1.6 Uncollected Waste', val: uncoll, children: [
+                    {name: 'Littering', val: lit},
+                    {name: 'Open Burning', val: brn}
+                ]},
+                {name: 'A1.7 Recovery', val: rec, children: []}
+            ].filter(d => d.val > 0);
+            
+            drawCharts(data);
+            drawTable(data, total, pop);
+            
+            document.getElementById('pieDiv').style.display = 'block';
+            document.getElementById('barDiv').style.display = 'block';
+            document.getElementById('tableDiv').style.display = 'block';
+        }
+        
+        // Draw charts
+        function drawCharts(data) {
+            const pieCtx = document.getElementById('pie').getContext('2d');
+            if (pieChart) pieChart.destroy();
+            
+            pieChart = new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(d => d.name),
+                    datasets: [{
+                        data: data.map(d => d.val),
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E74C3C'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {position: 'bottom', labels: {padding: 10, font: {size: 11}}},
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${context.label}: ${value.toLocaleString()} kg (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const barCtx = document.getElementById('bar').getContext('2d');
+            if (barChart) barChart.destroy();
+            
+            const subs = [];
+            const vals = [];
+            data.forEach(d => {
+                if (d.children && d.children.length > 0) {
+                    d.children.forEach(c => {
+                        if (c.children && c.children.length > 0) {
+                            c.children.forEach(sc => {
+                                if (sc.val > 0) {
+                                    subs.push(sc.name);
+                                    vals.push(sc.val);
+                                }
+                            });
+                        } else {
+                            subs.push(c.name);
+                            vals.push(c.val);
+                        }
+                    });
+                } else {
+                    subs.push(d.name);
+                    vals.push(d.val);
+                }
+            });
+            
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: subs,
+                    datasets: [{
+                        label: 'Plastic Leakage (kg/year)',
+                        data: vals,
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {display: false}
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {callback: function(val) { return val.toLocaleString(); }}
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Draw table
+        function drawTable(data, total, pop) {
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = '';
+            
+            data.forEach(main => {
+                const pct = ((main.val / total) * 100).toFixed(1);
+                const pc = pop > 0 ? (main.val / pop).toFixed(4) : 'N/A';
+                
+                const row = tbody.insertRow();
+                row.className = 'font-semibold bg-blue-50';
+                row.innerHTML = `<td class="px-6 py-4">${main.name}</td><td class="px-6 py-4">${main.val.toLocaleString('en-US', {maximumFractionDigits: 0})}</td><td class="px-6 py-4">${pct}%</td><td class="px-6 py-4">${pc}</td>`;
+                
+                if (main.children && main.children.length > 0) {
+                    main.children.forEach(sub => {
+                        if (sub.val > 0) {
+                            const spct = ((sub.val / total) * 100).toFixed(1);
+                            const spc = pop > 0 ? (sub.val / pop).toFixed(4) : 'N/A';
+                            const srow = tbody.insertRow();
+                            srow.className = 'bg-gray-50';
+                            srow.innerHTML = `<td class="px-6 py-4 pl-12">${sub.name}</td><td class="px-6 py-4">${sub.val.toLocaleString('en-US', {maximumFractionDigits: 0})}</td><td class="px-6 py-4">${spct}%</td><td class="px-6 py-4">${spc}</td>`;
+                            
+                            if (sub.children && sub.children.length > 0) {
+                                sub.children.forEach(subsub => {
+                                    if (subsub.val > 0) {
+                                        const sspct = ((subsub.val / total) * 100).toFixed(1);
+                                        const sspc = pop > 0 ? (subsub.val / pop).toFixed(4) : 'N/A';
+                                        const ssrow = tbody.insertRow();
+                                        ssrow.innerHTML = `<td class="px-6 py-4 pl-20 text-sm">${subsub.name}</td><td class="px-6 py-4 text-sm">${subsub.val.toLocaleString('en-US', {maximumFractionDigits: 0})}</td><td class="px-6 py-4 text-sm">${sspct}%</td><td class="px-6 py-4 text-sm">${sspc}</td>`;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            
+            const trow = tbody.insertRow();
+            trow.className = 'font-bold bg-primary text-white';
+            const tpc = pop > 0 ? (total / pop).toFixed(4) : 'N/A';
+            trow.innerHTML = `<td class="px-6 py-4">TOTAL LEAKAGE</td><td class="px-6 py-4">${total.toLocaleString('en-US', {maximumFractionDigits: 0})}</td><td class="px-6 py-4">100.0%</td><td class="px-6 py-4">${tpc}</td>`;
+        }
+        
+        // Tab navigation
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                
+                tabBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                this.classList.remove('bg-gray-200', 'text-gray-700');
+                this.classList.add('bg-primary', 'text-white');
+                
+                tabContents.forEach(c => {
+                    c.classList.remove('active');
+                });
+                document.getElementById(`${tab}-tab`).classList.add('active');
+            });
+        });
+        
+        // Update demo step display
+        function updateDemoStep() {
+            document.querySelectorAll('.demo-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            document.getElementById(`step${currentDemoStep}`).classList.add('active');
+            
+            if (currentDemoStep === 1) {
+                document.getElementById('prevBtn').classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('prevBtn').disabled = true;
+            } else {
+                document.getElementById('prevBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('prevBtn').disabled = false;
+            }
+            
+            if (currentDemoStep === totalDemoSteps) {
+                document.getElementById('nextBtn').innerHTML = 'Finish <i class="fa fa-check ml-2"></i>';
+            } else {
+                document.getElementById('nextBtn').innerHTML = 'Next <i class="fa fa-arrow-right ml-2"></i>';
+            }
+            
+            document.querySelectorAll('.demo-nav-btn').forEach((btn, index) => {
+                const stepNum = index + 1;
+                if (stepNum === currentDemoStep) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-primary', 'text-white');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Demo navigation button click handlers
+        document.querySelectorAll('.demo-nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentDemoStep = parseInt(this.getAttribute('data-step'));
+                updateDemoStep();
+            });
+        });
+        
+        // Next button click handler
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentDemoStep < totalDemoSteps) {
+                currentDemoStep++;
+                updateDemoStep();
+            } else {
+                alert('Demonstration complete! You can navigate back to review any step or modify inputs.');
+            }
+        });
+        
+        // Previous button click handler
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentDemoStep > 1) {
+                currentDemoStep--;
+                updateDemoStep();
+            }
+        });
+    </script>
+</body>
+</html>
